@@ -1,6 +1,6 @@
 
 ***
-## This fork has been done for the single purpose of changing the /<del/> tag to into /<s/> tag to make striking HTML4 compatible. No other changes have been made. All the credit belongs to [facelessuser](https://github.com/facelessuser).
+## This fork has been done for the single purpose of changing the 'del' tag to into 's' tag to make striking HTML4 compatible. No other changes have been made. All the credit belongs to [facelessuser](https://github.com/facelessuser).
 ***
 
 [![Donate via PayPal][donate-image]][donate-link]

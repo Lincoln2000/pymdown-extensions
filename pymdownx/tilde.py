@@ -3,7 +3,7 @@ Tilde.
 
 pymdownx.tilde
 Really simple plugin to add support for
-`<del>test</del>` tags as `~~test~~` and
+`<s>test</s>` tags as `~~test~~` and
 `<sub>test</sub>` tags as `~test~`
 
 MIT license.
@@ -33,33 +33,33 @@ SMART_MIXED_CONTENT = r'((?:~(?=[^\s])|(?<=\s)~+?(?=\s))+?~*)'
 CONTENT = r'(~|[^\s]+?)'
 CONTENT2 = r'((?:[^~]|(?<!~{2})~)+?)'
 
-# `~~~del,sub~~~`
+# `~~~s,sub~~~`
 DEL_SUB = r'(~{3})(?!\s)(~{1,2}|[^~\s]+?)(?<!\s)\1'
-# `~~~del,sub~del~~`
+# `~~~s,sub~s~~`
 DEL_SUB2 = r'(~{3})(?![\s~])%s(?<!\s)~%s(?<!\s)~{2}' % (CONTENT, CONTENT2)
-# `~~~sub,del~~sub~`
+# `~~~sub,s~~sub~`
 SUB_DEL = r'(~{3})(?![\s~])%s(?<!\s)~{2}%s(?<!\s)~' % (CONTENT, CONTENT)
-# `~~del~sub,del~~~`
+# `~~s~sub,s~~~`
 DEL_SUB3 = r'(~{2})(?![\s~])%s~(?![\s~])%s(?<!\s)~{3}' % (CONTENT2, CONTENT)
-# `~~del~~`
-DEL = r'(~{2})(?!\s)%s(?<!\s)\1' % CONTENT2
+# `~~s~~`
+s = r'(~{2})(?!\s)%s(?<!\s)\1' % CONTENT2
 # `~sub~`
 SUB = r'(~)(?!\s)%s(?<!\s)\1' % CONTENT
 
 # Smart rules for when "smart tilde" is enabled
-# SMART: `~~~del,sub~~~`
+# SMART: `~~~s,sub~~~`
 SMART_DEL_SUB = r'(~{3})(?![\s~])%s(?<!\s)\1' % CONTENT
-# `~~~del,sub~ del~~`
+# `~~~s,sub~ s~~`
 SMART_DEL_SUB2 = \
     r'(~{3})(?![\s~])%s(?<!\s)~(?:(?=_)|(?![\w~]))%s(?<!\s)~{2}' % (
         CONTENT, SMART_CONTENT
     )
-# `~~~sub,del~~ sub~`
+# `~~~sub,s~~ sub~`
 SMART_SUB_DEL = \
     r'(~{3})(?![\s~])%s(?<!\s)~{2}(?:(?=_)|(?![\w~]))%s(?<!\s)~' % (
         CONTENT, CONTENT
     )
-# `~~del~~`
+# `~~s~~`
 SMART_DEL = r'(?:(?<=_)|(?<![\w~]))(~{2})(?![\s~])%s(?<!\s)\1(?:(?=_)|(?![\w~]))' % SMART_CONTENT
 
 
@@ -67,11 +67,11 @@ class TildeProcessor(util.PatternSequenceProcessor):
     """Emphasis processor for handling delete and subscript matches."""
 
     PATTERNS = [
-        util.PatSeqItem(re.compile(DEL_SUB, re.DOTALL | re.UNICODE), 'double', 'del,sub'),
-        util.PatSeqItem(re.compile(SUB_DEL, re.DOTALL | re.UNICODE), 'double', 'sub,del'),
-        util.PatSeqItem(re.compile(DEL_SUB2, re.DOTALL | re.UNICODE), 'double', 'del,sub'),
-        util.PatSeqItem(re.compile(DEL_SUB3, re.DOTALL | re.UNICODE), 'double2', 'del,sub'),
-        util.PatSeqItem(re.compile(DEL, re.DOTALL | re.UNICODE), 'single', 'del'),
+        util.PatSeqItem(re.compile(DEL_SUB, re.DOTALL | re.UNICODE), 'double', 's,sub'),
+        util.PatSeqItem(re.compile(SUB_DEL, re.DOTALL | re.UNICODE), 'double', 'sub,s'),
+        util.PatSeqItem(re.compile(DEL_SUB2, re.DOTALL | re.UNICODE), 'double', 's,sub'),
+        util.PatSeqItem(re.compile(DEL_SUB3, re.DOTALL | re.UNICODE), 'double2', 's,sub'),
+        util.PatSeqItem(re.compile(s, re.DOTALL | re.UNICODE), 'single', 's'),
         util.PatSeqItem(re.compile(SUB, re.DOTALL | re.UNICODE), 'single', 'sub')
     ]
 
@@ -80,10 +80,10 @@ class TildeSmartProcessor(util.PatternSequenceProcessor):
     """Smart delete and subscript processor."""
 
     PATTERNS = [
-        util.PatSeqItem(re.compile(SMART_DEL_SUB, re.DOTALL | re.UNICODE), 'double', 'del,sub'),
-        util.PatSeqItem(re.compile(SMART_SUB_DEL, re.DOTALL | re.UNICODE), 'double', 'sub,del'),
-        util.PatSeqItem(re.compile(SMART_DEL_SUB2, re.DOTALL | re.UNICODE), 'double', 'del,sub'),
-        util.PatSeqItem(re.compile(SMART_DEL, re.DOTALL | re.UNICODE), 'single', 'del'),
+        util.PatSeqItem(re.compile(SMART_DEL_SUB, re.DOTALL | re.UNICODE), 'double', 's,sub'),
+        util.PatSeqItem(re.compile(SMART_SUB_DEL, re.DOTALL | re.UNICODE), 'double', 'sub,s'),
+        util.PatSeqItem(re.compile(SMART_DEL_SUB2, re.DOTALL | re.UNICODE), 'double', 's,sub'),
+        util.PatSeqItem(re.compile(SMART_DEL, re.DOTALL | re.UNICODE), 'single', 's'),
         util.PatSeqItem(re.compile(SUB, re.DOTALL | re.UNICODE), 'single', 'sub')
     ]
 
@@ -100,7 +100,7 @@ class TildeDeleteProcessor(util.PatternSequenceProcessor):
     """Just delete processor."""
 
     PATTERNS = [
-        util.PatSeqItem(re.compile(DEL, re.DOTALL | re.UNICODE), 'single', 'del')
+        util.PatSeqItem(re.compile(s, re.DOTALL | re.UNICODE), 'single', 's')
     ]
 
 
@@ -108,7 +108,7 @@ class TildeSmartDeleteProcessor(util.PatternSequenceProcessor):
     """Just smart delete processor."""
 
     PATTERNS = [
-        util.PatSeqItem(re.compile(SMART_DEL, re.DOTALL | re.UNICODE), 'single', 'del')
+        util.PatSeqItem(re.compile(SMART_DEL, re.DOTALL | re.UNICODE), 'single', 's')
     ]
 
 
@@ -127,7 +127,7 @@ class DeleteSubExtension(Extension):
         super(DeleteSubExtension, self).__init__(*args, **kwargs)
 
     def extendMarkdown(self, md):
-        """Insert `<del>test</del>` tags as `~~test~~` and `<sub>test</sub>` tags as `~test~`."""
+        """Insert `<s>test</s>` tags as `~~test~~` and `<sub>test</sub>` tags as `~test~`."""
 
         config = self.getConfigs()
         delete = bool(config.get('delete', True))
@@ -159,3 +159,5 @@ def makeExtension(*args, **kwargs):
     """Return extension."""
 
     return DeleteSubExtension(*args, **kwargs)
+
+
